@@ -1,0 +1,43 @@
+.leftSide {
+  flex: 2;
+  background: #D06666;
+  color: white;
+  position: relative;
+  padding: 1rem;
+}
+
+.leftSide:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/sushi-background.png');
+  background-position: -50px bottom;
+  background-repeat: no-repeat;
+  background-size: 80% auto;
+  z-index: 2;
+}
+
+.mainTitle {
+  font-size: 3rem;
+}
+
+.verticalText {
+  font-size: 3.6rem;
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  position: absolute;
+  right: 20px;
+  top: 20px;
+}
+
+.faded {
+  font-size: 16rem;
+  opacity: 0.1;
+  left: 20px;
+  top: 30%;
+  right: auto;
+  word-break: keep-all;
+}
