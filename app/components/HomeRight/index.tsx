@@ -1,20 +1,34 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import styles from "./index.module.css";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { goerli } from "wagmi/chains";
-import { usePrepareContractWrite, useContractWrite } from "wagmi";
+import { usePrepareContractWrite, useContractWrite, useAccount } from "wagmi";
 import nigriAbi from "@/app/abis/Nigiri.abi.json";
 import Image from "next/image";
 import { useCalculateCost } from "@/app/hooks/useCalculateCost";
+import { createPublicClient, formatEther, http, parseEther } from "viem";
+import { useReadMintEvents } from "@/app/hooks/useReadMintEvents";
+import { shortenAddress } from "@/app/utils/shortenAddress";
+import moment from "moment";
+
+export const publicClient = createPublicClient({
+  chain: goerli,
+  transport: http(),
+});
 
 const MINT_CONTRACT_ADDRESS = "0xe6148aabfd307f1ebe2a093fc0cab04f214c1183";
+const RPC_PROVIDER_URL =
+  "https://goerli.infura.io/v3/4bf032f2d38a4ed6bb975b80d6340847";
 
 export default function HomeRight() {
   const { cost, costInEth } = useCalculateCost();
 
-  console.log("debug cost", cost);
+  const { data, isLoading } = useReadMintEvents(
+    MINT_CONTRACT_ADDRESS,
+    RPC_PROVIDER_URL
+  );
 
   const { config } = usePrepareContractWrite({
     address: MINT_CONTRACT_ADDRESS,
@@ -29,6 +43,36 @@ export default function HomeRight() {
   const handleClick = useCallback(() => {
     write?.();
   }, [write]);
+
+  const renderActivity = useMemo(() => {
+    if (isLoading) {
+      return <div>Loading activity...</div>;
+    }
+
+    if (!data) {
+      return null;
+    }
+
+    return data
+      .sort((a: any, b: any) => b.value.timestamp - a.value.timestamp)
+      .map((item: any) => {
+        if (!item) {
+          return null;
+        }
+
+        const address = shortenAddress(item.value.tx.from);
+        const value = Number(
+          formatEther(item.value.tx.value.toString())
+        ).toFixed(4);
+        const time = moment(item.value.timestamp * 1000).fromNow();
+
+        return (
+          <div key={item.value?.timestamp} className={styles.activityItem}>
+            {address} - {value} ETH - {time}
+          </div>
+        );
+      });
+  }, [data, isLoading]);
 
   return (
     <div className={styles.rightSide}>
@@ -59,6 +103,7 @@ export default function HomeRight() {
 
         <div className={styles.mainContentRight}>
           <h4 className={styles.activityTitle}>Activity</h4>
+          {renderActivity}
         </div>
       </div>
     </div>

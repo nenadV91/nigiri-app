@@ -64,6 +64,20 @@
 }
 
 .activityTitle {
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   font-weight: 300;
+  margin-bottom: 1rem;
+}
+
+.activityItem {
+  padding: 1rem;
+  margin-bottom: 1rem;
+  color: white;
+  background: #79969F;
+  display: flex;
+  align-items: center;
+}
+
+.mainContentRight {
+  flex: 1;
 }
