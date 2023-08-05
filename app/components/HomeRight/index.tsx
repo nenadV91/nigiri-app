@@ -20,7 +20,7 @@ export const publicClient = createPublicClient({
 
 const MINT_CONTRACT_ADDRESS = "0xe6148aabfd307f1ebe2a093fc0cab04f214c1183";
 const RPC_PROVIDER_URL =
-  "https://goerli.infura.io/v3/4bf032f2d38a4ed6bb975b80d6340847";
+  "https://goerli.infura.io/v3/17911305d1cd4604a6b90a2c993fa8eb";
 
 export default function HomeRight() {
   const { cost, costInEth } = useCalculateCost();
